@@ -126,21 +126,30 @@ const chatMessages = [
 ]
 
 const Messages = (props) => (
-  <li className={`message-${props.align} ${props.name}`} hidden>
-    <div className={`messageinner-${props.name}`} hidden>
-      {
-        props.align === 'left'
-          ? <span className='message-text' style={{ color: 'red', textAlign: 'left' }}>{props.msg}</span>
-          : <span className='message-text' style={{ color: 'blue', textAlign: 'right' }}>{props.msg}</span>
-      }
-      {
-        props.showTime && <span className='message-time'>{props.time}</span>
-      }
-    </div>
-  </li>
+    <li className={`message-${props.align} ${props.name}`} hidden>
+  {/*    <div className={`sp-${props.name}`}>
+        <span className={`spinme-${props.align}`}>
+          <div className='spinner'>
+            <div className='bounce1' />
+            <div className='bounce2' />
+            <div className='bounce3' />
+          </div>
+        </span>
+      </div>*/}
+      <div className={`messageinner-${props.name}`} hidden>
+        {
+          props.align === 'left'
+          ? <span className='message-text' style={{color: 'red', textAlign: 'left'}}>{props.msg}</span>
+            : <span className='message-text' style={{color: 'blue', textAlign: 'right'}}>{props.msg}</span>
+        }
+        {
+          props.showTime && <span className='message-time'>{props.time}</span>
+        }
+      </div>
+    </li>
 )
 
-const App = () => {
+const Original = () => {
   let chatDelay = 0
 
   const onRowAdded = () => {
@@ -152,19 +161,27 @@ const App = () => {
 
   React.useEffect(() => {
     chatMessages.forEach((obj, index) => {
-        chatDelay = chatDelay + 100
-        let chatDelay2 = chatDelay + obj.delay
-        let chatDelay3 = chatDelay2 + 10
-        let msgname = `.${obj.name}`
-        let msginner = `.messageinner-${obj.name}`
-        $(msgname).delay(chatDelay).fadeIn()
-        $(msginner).delay(chatDelay3).fadeIn()
-        setTimeout(onRowAdded, chatDelay)
-        setTimeout(onRowAdded, chatDelay3)
-        chatDelay = chatDelay3
+      chatDelay = chatDelay + 4000;
+      let chatDelay2 = chatDelay + obj.delay;
+      let chatDelay3 = chatDelay2 + 10;
+      let scrollDelay = chatDelay;
+      let chatTimeString = " ";
+      let msgname = "." + obj.name;
+      let msginner = ".messageinner-" + obj.name;
+      let spinner = ".sp-" + obj.name;
+      if (obj.showTime) {
+        chatTimeString = "<span class='message-time'>" + obj.time + "</span>";
       }
-    )
+      $(".chat-message-list").append("<li class='message-" + obj.align + " " + obj.name + "' hidden><div class='sp-" + obj.name + "'><span class='spinme-" + obj.align + "'><div class='spinner'><div class='bounce1'></div><div class='bounce2'></div><div class='bounce3'></div></div></span></div><div class='messageinner-" + obj.name + "' hidden><span class='message-text'>" + obj.msg + "</span>" + chatTimeString + "</div></li>");
+      $(msgname).delay(chatDelay).fadeIn();
+      $(spinner).delay(chatDelay2).hide(1);
+      $(msginner).delay(chatDelay3).fadeIn();
+      setTimeout(onRowAdded, chatDelay);
+      setTimeout(onRowAdded, chatDelay3);
+      chatDelay = chatDelay3;
+    })
   }, [])
+
 
   return (
     <div id="wrapper">
@@ -173,7 +190,7 @@ const App = () => {
           <div className="chat-listcontainer">
             <ul className="chat-message-list">
               {
-                chatMessages.map(obj => <Messages {...obj} />)
+                // chatMessages.map(obj => <Messages {...obj} />)
               }
             </ul>
           </div>
@@ -183,4 +200,4 @@ const App = () => {
   )
 }
 
-export default App
+export default Original
